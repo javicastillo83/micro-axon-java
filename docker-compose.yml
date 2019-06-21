@@ -1,0 +1,24 @@
+version: '3'
+services:
+    db:
+        image: mysql:8.0.16
+        container_name: micro-db
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: micro
+            MYSQL_USER: micro
+            MYSQL_PASSWORD: micro
+        ports:
+            - "6306:3306"
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
+            - ./docker/mysql-8.0.16-dockerized.cnf:/etc/mysql/conf.d/mysql-8.0.16-dockerized.cnf
+    rabbit:
+        image: rabbitmq:3.7-management
+        container_name: micro-rabbit
+        environment:
+            RABBITMQ_DEFAULT_USER: rabbit
+            RABBITMQ_DEFAULT_PASS: rabbit
+        ports:
+            - "6672:5672"
+            - "15672:15672"

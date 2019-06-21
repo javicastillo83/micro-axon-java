@@ -10,9 +10,6 @@ services:
             MYSQL_PASSWORD: micro
         ports:
             - "6306:3306"
-        volumes:
-            - ./docker/mysql/data:/var/lib/mysql
-            - ./docker/mysql-8.0.16-dockerized.cnf:/etc/mysql/conf.d/mysql-8.0.16-dockerized.cnf
     rabbit:
         image: rabbitmq:3.7-management
         container_name: micro-rabbit

@@ -1,17 +1,18 @@
 package com.sbaxon.business.client.service;
 
-import com.sbaxon.business.client.dto.ClientDTO;
+import com.sbaxon.business.client.dto.CreateClientDTO;
+import com.sbaxon.business.client.dto.SubscribeProductDTO;
+import com.sbaxon.business.client.dto.UpdateClientDTO;
 
 import java.util.concurrent.CompletableFuture;
 
 public interface IClientService {
 
-    CompletableFuture<ClientDTO> create(ClientDTO clientDTO);
-    CompletableFuture<ClientDTO> update(String uuid, ClientDTO clientDTO);
-    CompletableFuture<Void> delete(String uuid);
+    CompletableFuture<String> create(CreateClientDTO createClientDTO);
 
-    ClientDTO createSync(ClientDTO clientDTO);
-    ClientDTO updateSync(String uuid, ClientDTO clientDTO);
-    void deleteSync(String uuid);
+    CompletableFuture<String> update(String clientUUID, UpdateClientDTO updateClientDTO);
 
+    CompletableFuture<String> subscribeProduct(String clientUUID, SubscribeProductDTO subscribeProductDTO);
+
+    CompletableFuture<String> unSubscribeProduct(String clientUUID, String productUUID);
 }

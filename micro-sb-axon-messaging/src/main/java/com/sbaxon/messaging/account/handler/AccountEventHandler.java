@@ -1,7 +1,11 @@
 package com.sbaxon.messaging.account.handler;
 
-import com.sbaxon.business.account.event.*;
+import com.sbaxon.business.account.event.AccountActivatedEvent;
+import com.sbaxon.business.account.event.AccountCreatedEvent;
+import com.sbaxon.business.account.event.MoneyCreditedEvent;
+import com.sbaxon.business.account.event.MoneyDebitedEvent;
 import com.sbaxon.messaging.account.entity.Account;
+import com.sbaxon.messaging.account.entity.AccountStatus;
 import com.sbaxon.messaging.account.repository.IAccountRepository;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
@@ -16,32 +20,28 @@ public class AccountEventHandler {
     }
 
     @EventHandler
-    public void on(CreatedAccountEvent event) {
-        accountRepository.save(new Account(event.getUuid(), event.getName()));
-    }
-
-    @EventHandler
-    public void on(UpdatedAccountEvent event) {
-        Account account = accountRepository.findByUuid(event.getUuid());
-        account.setName(event.getName());
+    public void on(AccountCreatedEvent event) {
+        Account account = new Account(event.getAccountUUID(), event.getClientUUID());
         accountRepository.save(account);
     }
 
     @EventHandler
-    public void on(DeletedAccountEvent event) {
-        accountRepository.deleteByUuid(event.getUuid());
+    public void on(AccountActivatedEvent event) {
+        Account account = accountRepository.findByUuid(event.getAccountUUID());
+        account.setStatus(AccountStatus.valueOf(event.getStatus().toString()));
+        accountRepository.save(account);
     }
 
     @EventHandler
-    public void on(DebitMoneyEvent event) {
-        Account account = accountRepository.findByUuid(event.getUuid());
+    public void on(MoneyDebitedEvent event) {
+        Account account = accountRepository.findByUuid(event.getAccountUUID());
         account.setBalance(account.getBalance() - event.getAmount());
         accountRepository.save(account);
     }
 
     @EventHandler
-    public void on(CreditMoneyEvent event) {
-        Account account = accountRepository.findByUuid(event.getUuid());
+    public void on(MoneyCreditedEvent event) {
+        Account account = accountRepository.findByUuid(event.getAccountUUID());
         account.setBalance(account.getBalance() + event.getAmount());
         accountRepository.save(account);
     }

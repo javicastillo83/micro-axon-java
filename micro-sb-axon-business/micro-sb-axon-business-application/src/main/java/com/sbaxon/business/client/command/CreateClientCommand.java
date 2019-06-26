@@ -8,8 +8,12 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 @Builder
 public class CreateClientCommand {
 
-   @TargetAggregateIdentifier
-   private String uuid;
+    @TargetAggregateIdentifier
+    private String clientUUID;
 
-   private String name;
+    private String firstName;
+
+    private String lastName;
+
+    private String email;
 }

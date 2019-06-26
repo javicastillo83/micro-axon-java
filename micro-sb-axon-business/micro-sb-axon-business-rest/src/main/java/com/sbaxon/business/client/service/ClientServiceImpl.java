@@ -1,9 +1,12 @@
 package com.sbaxon.business.client.service;
 
-import com.sbaxon.business.client.dto.ClientDTO;
 import com.sbaxon.business.client.command.CreateClientCommand;
-import com.sbaxon.business.client.command.DeleteClientCommand;
+import com.sbaxon.business.client.command.SubscribeServiceCommand;
+import com.sbaxon.business.client.command.UnSubscribeServiceCommand;
 import com.sbaxon.business.client.command.UpdateClientCommand;
+import com.sbaxon.business.client.dto.CreateClientDTO;
+import com.sbaxon.business.client.dto.SubscribeProductDTO;
+import com.sbaxon.business.client.dto.UpdateClientDTO;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Service;
 
@@ -20,53 +23,40 @@ public class ClientServiceImpl implements IClientService {
     }
 
     @Override
-    public CompletableFuture<ClientDTO> create(ClientDTO clientDTO) {
-        String uuid = UUID.randomUUID()
-                          .toString();
+    public CompletableFuture<String> create(CreateClientDTO createClientDTO) {
+        String clientUUID = UUID.randomUUID().toString();
         return commandGateway.send(CreateClientCommand.builder()
-                                                       .uuid(uuid)
-                                                       .name(clientDTO.getName())
-                                                       .build());
+                                                      .clientUUID(clientUUID)
+                                                      .firstName(createClientDTO.getFirstName())
+                                                      .lastName(createClientDTO.getLastName())
+                                                      .email(createClientDTO.getEmail())
+                                                      .build());
     }
 
     @Override
-    public CompletableFuture<ClientDTO> update(String uuid, ClientDTO clientDTO) {
+    public CompletableFuture<String> update(String clientUUID, UpdateClientDTO updateClientDTO) {
         return commandGateway.send(UpdateClientCommand.builder()
-                                                       .uuid(uuid)
-                                                       .name(clientDTO.getName())
-                                                       .build());
+                                                      .clientUUID(clientUUID)
+                                                      .firstName(updateClientDTO.getFirstName())
+                                                      .lastName(updateClientDTO.getLastName())
+                                                      .email(updateClientDTO.getEmail())
+                                                      .build());
     }
 
     @Override
-    public CompletableFuture<Void> delete(String uuid) {
-        return commandGateway.send(DeleteClientCommand.builder()
-                                                       .uuid(uuid)
-                                                       .build());
+    public CompletableFuture<String> subscribeProduct(String clientUUID, SubscribeProductDTO subscribeProductDTO) {
+        return commandGateway.send(SubscribeServiceCommand.builder()
+                                                            .clientUUID(clientUUID)
+                                                            .serviceUUID(subscribeProductDTO.getServiceUUID())
+                                                            .build());
     }
 
     @Override
-    public ClientDTO createSync(ClientDTO clientDTO) {
-        String uuid = UUID.randomUUID()
-                          .toString();
-        return commandGateway.sendAndWait(CreateClientCommand.builder()
-                                                              .uuid(uuid)
-                                                              .name(clientDTO.getName())
-                                                              .build());
-    }
-
-    @Override
-    public ClientDTO updateSync(String uuid, ClientDTO clientDTO) {
-        return commandGateway.sendAndWait(UpdateClientCommand.builder()
-                                                              .uuid(clientDTO.getUuid())
-                                                              .name(clientDTO.getName())
-                                                              .build());
-    }
-
-    @Override
-    public void deleteSync(String uuid) {
-        commandGateway.sendAndWait(DeleteClientCommand.builder()
-                                                              .uuid(uuid)
-                                                              .build());
+    public CompletableFuture<String> unSubscribeProduct(String clientUUID, String productUUID) {
+        return commandGateway.send(UnSubscribeServiceCommand.builder()
+                                                          .clientUUID(clientUUID)
+                                                          .productUUID(productUUID)
+                                                          .build());
     }
 
 }

@@ -1,11 +1,18 @@
 package com.sbaxon.business.account.aggregate;
 
-import com.sbaxon.business.account.command.*;
+import com.sbaxon.business.account.command.CreditMoneyCommand;
+import com.sbaxon.business.account.command.DebitMoneyCommand;
 import com.sbaxon.business.account.event.*;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
+import org.axonframework.modelling.command.AggregateMember;
 import org.axonframework.spring.stereotype.Aggregate;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
@@ -13,76 +20,90 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 public class AccountAggregate {
 
     @AggregateIdentifier
-    private String uuid;
+    private String accountUUID;
 
-    private String name;
+    private String clientUUID;
 
-    private double balance;
+    private String number;
 
+    private double amount;
 
-    public AccountAggregate() {
-    }
+    private AccountStatus status;
 
-    //Constructor en vez de un método porque axon lo usa en la creación
-    @CommandHandler
-    public AccountAggregate(CreateAccountCommand createAccountCommand) {
-        apply(CreatedAccountEvent.builder()
-                                 .uuid(createAccountCommand.getUuid())
-                                 .name(createAccountCommand.getName())
-                                 .build());
-    }
+    @AggregateMember
+    private List<Operation> operations;
 
-    @CommandHandler
-    public void on(DeleteAccountCommand deleteAccountCommand) {
-        apply(DeletedAccountEvent.builder()
-                                 .uuid(deleteAccountCommand.getUuid())
-                                 .build());
-    }
-
-    @CommandHandler
-    public void on(UpdateAccountCommand updateAccountCommand) {
-        apply(UpdatedAccountEvent.builder()
-                                 .uuid(updateAccountCommand.getUuid())
-                                 .name(updateAccountCommand.getName())
-                                 .build());
+    @EventSourcingHandler
+    public void on(AccountCreatedEvent accountCreatedEvent) {
+        number = accountCreatedEvent.getNumber();
+        clientUUID = accountCreatedEvent.getClientUUID();
+        status = AccountStatus.CREATED;
+        operations = new ArrayList<>();
     }
 
     @CommandHandler
     public void on(CreditMoneyCommand creditMoneyCommand) {
-        apply(CreditMoneyEvent.builder()
-                              .uuid(creditMoneyCommand.getUuid())
-                              .amount(creditMoneyCommand.getAmount())
-                              .build());
+        apply(MoneyCreditedEvent.builder()
+                                .accountUUID(creditMoneyCommand.getAccountUUID())
+                                .date(new Date())
+                                .amount(creditMoneyCommand.getAmount())
+                                .build());
+    }
+
+    @EventSourcingHandler
+    public void on(MoneyCreditedEvent moneyCreditedEvent) {
+
+        if (this.amount < 0 & (this.amount + moneyCreditedEvent.getAmount()) >= 0) {
+            apply(AccountActivatedEvent.builder()
+                                       .accountUUID(this.accountUUID)
+                                       .status(AccountStatus.ACTIVATED));
+        }
+
+        amount += moneyCreditedEvent.getAmount();
+
+        //add operation
+        operations.add(Operation.builder()
+                                .operationUUID(UUID.randomUUID().toString())
+                                .date(new Date())
+                                .amount(moneyCreditedEvent.getAmount()).build());
     }
 
     @CommandHandler
     public void on(DebitMoneyCommand debitMoneyCommand) {
-        apply(DebitMoneyEvent.builder()
-                             .uuid(debitMoneyCommand.getUuid())
-                             .amount(debitMoneyCommand.getAmount())
-                             .build());
-    }
-
-
-    @EventSourcingHandler
-    public void on(CreatedAccountEvent createdAccountEvent) {
-        uuid = createdAccountEvent.getUuid();
-        name = createdAccountEvent.getName();
-        balance = 0.0;
+        apply(MoneyDebitedEvent.builder()
+                               .accountUUID(debitMoneyCommand.getAccountUUID())
+                               .date(new Date())
+                               .amount(debitMoneyCommand.getAmount())
+                               .build());
     }
 
     @EventSourcingHandler
-    public void on(UpdatedAccountEvent updatedAccountEvent) {
-        name = updatedAccountEvent.getName();
+    public void on(MoneyDebitedEvent moneyDebitedEvent) {
+
+        if (this.amount >= 0 & (this.amount - moneyDebitedEvent.getAmount()) < 0) {
+            apply(AccountDisabledEvent.builder()
+                                      .accountUUID(this.accountUUID)
+                                      .status(AccountStatus.HOLD));
+        }
+        amount -= moneyDebitedEvent.getAmount();
+
+        //add operation
+        operations.add(Operation.builder()
+                                .operationUUID(UUID.randomUUID().toString())
+                                .date(new Date())
+                                .amount(moneyDebitedEvent.getAmount()).build());
+
     }
 
     @EventSourcingHandler
-    public void on(CreditMoneyEvent creditMoneyEvent) {
-        balance += creditMoneyEvent.getAmount();
+    public void on(AccountActivatedEvent accountActivatedEvent) {
+        status = accountActivatedEvent.getStatus();
+
     }
 
     @EventSourcingHandler
-    public void on(DebitMoneyEvent debitMoneyEvent) {
-        balance -= debitMoneyEvent.getAmount();
+    public void on(AccountDisabledEvent accountDisabledEvent) {
+        status = accountDisabledEvent.getStatus();
     }
+
 }

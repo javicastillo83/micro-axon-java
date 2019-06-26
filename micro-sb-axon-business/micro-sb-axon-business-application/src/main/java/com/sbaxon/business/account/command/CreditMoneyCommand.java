@@ -9,6 +9,10 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 public class CreditMoneyCommand {
 
    @TargetAggregateIdentifier
-   private String uuid;
+   private String accountUUID;
+
    private double amount;
+
+   private String description;
+
 }

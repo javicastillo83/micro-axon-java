@@ -19,7 +19,7 @@ public class Account {
 
     private String uuid;
 
-    private String name;
+    private String number;
 
     private double balance;
 
@@ -30,13 +30,9 @@ public class Account {
     @JoinColumn(name="client_id")
     private Client client;
 
-    public Account(String name) {
-        this.name = name;
-    }
-
-    public Account(String uuid, String name) {
+    public Account(String uuid, String number) {
         this.uuid = uuid;
-        this.name = name;
+        this.number = number;
     }
 
 

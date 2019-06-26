@@ -14,23 +14,26 @@ import java.util.List;
 @NoArgsConstructor
 public class Client {
 
+    public Client(String uuid, String firstName, String lastName, String email) {
+        this.uuid = uuid;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String uuid;
 
-    private String name;
+    private String firstName;
+
+    private String lastName;
+
+    private String email;
 
     @OneToMany(mappedBy = "client")
     private List<Account> accounts;
 
-    public Client(String name) {
-        this.name = name;
-    }
-
-    public Client(String uuid, String name) {
-        this.uuid = uuid;
-        this.name = name;
-    }
 }

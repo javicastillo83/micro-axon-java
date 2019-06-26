@@ -1,12 +1,13 @@
 package com.sbaxon.business.client.controller;
 
-import com.sbaxon.business.client.dto.ClientDTO;
+import com.sbaxon.business.client.dto.CreateClientDTO;
+import com.sbaxon.business.client.dto.SubscribeProductDTO;
+import com.sbaxon.business.client.dto.UpdateClientDTO;
 import com.sbaxon.business.client.service.IClientService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/clients")
@@ -19,44 +20,23 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity createClient(@RequestBody @Valid ClientDTO clientDTO) {
-        clientService.create(clientDTO);
-        return ResponseEntity.accepted()
-                             .body(ClientDTO.builder()
-                                             .uuid(clientDTO.getUuid())
-                                             .build());
+    public CompletableFuture<String> createClient(@RequestBody @Valid CreateClientDTO createClientDTO) {
+        return clientService.create(createClientDTO);
     }
 
-    @PutMapping("/{uuid}")
-    public ResponseEntity updateClient(@PathVariable String uuid, @RequestBody @Valid ClientDTO clientDTO) {
-        this.clientService.update(uuid, clientDTO);
-        return ResponseEntity.accepted()
-                             .build();
+    @PutMapping("/{clientUUID}")
+    public CompletableFuture<String> updateClient(@PathVariable String clientUUID, @RequestBody @Valid UpdateClientDTO updateClientDTO) {
+        return this.clientService.update(clientUUID, updateClientDTO);
     }
 
-    @DeleteMapping("/{uuid}")
-    public ResponseEntity deleteClient(@PathVariable String uuid) {
-        this.clientService.delete(uuid);
-        return ResponseEntity.accepted()
-                             .build();
+    @PostMapping("/{clientUUID}/products")
+    public CompletableFuture<String> subscribeProduct(@PathVariable String clientUUID, @RequestBody @Valid SubscribeProductDTO subscribeProductDTO) {
+        return this.clientService.subscribeProduct(clientUUID, subscribeProductDTO);
     }
 
-    @PostMapping("/sync")
-    public ResponseEntity<ClientDTO> syncCreateClient(@RequestBody @Valid ClientDTO clientDTO) {
-        return new ResponseEntity(this.clientService.createSync(clientDTO), HttpStatus.OK);
+    @DeleteMapping("/{clientUUID}/products/{productUUID}")
+    public CompletableFuture<String> unSubscribeProduct(@PathVariable String clientUUID, @PathVariable String productUUID) {
+        return this.clientService.unSubscribeProduct(clientUUID,productUUID);
     }
-
-    @PutMapping("/sync/{uuid}")
-    public ResponseEntity<ClientDTO> syncUpdateClient(@PathVariable String uuid, @RequestBody @Valid ClientDTO clientDTO) {
-        return new ResponseEntity(this.clientService.updateSync(uuid, clientDTO), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/sync/{uuid}")
-    public ResponseEntity<String> syncDeleteClient(@PathVariable String uuid) {
-        this.clientService.deleteSync(uuid);
-        return new ResponseEntity(HttpStatus.OK);
-
-    }
-
 }
 

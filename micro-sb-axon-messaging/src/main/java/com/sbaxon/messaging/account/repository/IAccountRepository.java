@@ -7,5 +7,4 @@ public interface IAccountRepository extends JpaRepository<Account,Long> {
 
     Account findByUuid(String uuid);
 
-    void deleteByUuid(String uuid);
 }

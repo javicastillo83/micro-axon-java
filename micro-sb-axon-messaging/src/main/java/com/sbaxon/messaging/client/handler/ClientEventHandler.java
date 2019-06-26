@@ -1,10 +1,8 @@
 package com.sbaxon.messaging.client.handler;
 
-
+import com.sbaxon.business.client.event.ClientCreatedEvent;
+import com.sbaxon.business.client.event.ClientUpdatedEvent;
 import com.sbaxon.messaging.client.entity.Client;
-import com.sbaxon.business.client.event.CreatedClientEvent;
-import com.sbaxon.business.client.event.DeletedClientEvent;
-import com.sbaxon.business.client.event.UpdatedClientEvent;
 import com.sbaxon.messaging.client.repository.IClientRepository;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
@@ -19,20 +17,18 @@ public class ClientEventHandler {
     }
 
     @EventHandler
-    public void on(CreatedClientEvent event) {
-        clientRepository.save(new Client(event.getUuid(),event.getName()));
-    }
-
-    @EventHandler
-    public void on(UpdatedClientEvent event) {
-        Client client = clientRepository.findByUuid(event.getUuid());
-        client.setName(event.getName());
+    public void on(ClientCreatedEvent event) {
+        Client client = new Client(event.getClientUUID(), event.getFirstName(), event.getLastName(), event.getEmail());
         clientRepository.save(client);
     }
 
     @EventHandler
-    public void on(DeletedClientEvent event) {
-        clientRepository.deleteByUuid(event.getUuid());
+    public void on(ClientUpdatedEvent event) {
+        Client client = clientRepository.findByUuid(event.getClientUUID());
+        client.setFirstName(event.getFirstName());
+        client.setLastName(event.getLastName());
+        client.setEmail(event.getEmail());
+        clientRepository.save(client);
     }
 
 }

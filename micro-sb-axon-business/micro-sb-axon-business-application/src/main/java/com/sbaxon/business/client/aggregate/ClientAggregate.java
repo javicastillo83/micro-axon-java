@@ -1,6 +1,5 @@
 package com.sbaxon.business.client.aggregate;
 
-import com.sbaxon.business.account.event.AccountCreatedEvent;
 import com.sbaxon.business.client.command.CreateClientCommand;
 import com.sbaxon.business.client.command.SubscribeServiceCommand;
 import com.sbaxon.business.client.command.UnSubscribeServiceCommand;
@@ -36,6 +35,7 @@ public class ClientAggregate {
     @AggregateMember
     private List<ProductEntity> products;
 
+
     public ClientAggregate() {
     }
 
@@ -59,7 +59,7 @@ public class ClientAggregate {
     }
 
     @CommandHandler
-    public void on(UpdateClientCommand updateClientCommand) {
+    public void handle(UpdateClientCommand updateClientCommand) {
         apply(ClientUpdatedEvent.builder()
                                 .clientUUID(updateClientCommand.getClientUUID())
                                 .firstName(updateClientCommand.getFirstName())
@@ -77,32 +77,24 @@ public class ClientAggregate {
     }
 
     @CommandHandler
-    public void on(SubscribeServiceCommand subscribeServiceCommand) {
+    public void handle(SubscribeServiceCommand subscribeServiceCommand) {
         apply(ServiceSubscribedEvent.builder()
-                                    .clientUUID(subscribeServiceCommand.getClientUUID())
                                     .serviceUUID(subscribeServiceCommand.getServiceUUID())
+                                    .clientUUID(subscribeServiceCommand.getClientUUID())
+                                    .subscriptionUUID(UUID.randomUUID().toString())
                                     .build());
     }
 
     @EventSourcingHandler
-    public void on(ServiceSubscribedEvent serviceSubscribedEvent) throws Exception {
+    public void on(ServiceSubscribedEvent serviceSubscribedEvent) {
         ProductEntity productEntity = new ProductEntity();
         productEntity.setProductUUID(UUID.randomUUID().toString());
         productEntity.setServiceUUID(serviceSubscribedEvent.getServiceUUID());
         products.add(productEntity);
-
-
-        //TODO: Se crea como mi agregado...creo que no deberia ser así
-
-        apply(AccountCreatedEvent.builder()
-                                 .clientUUID(serviceSubscribedEvent.getClientUUID())
-                                 .accountUUID(UUID.randomUUID().toString())
-                                 .number(UUID.randomUUID().toString())
-                                 .build());
     }
 
     @CommandHandler
-    public void on(UnSubscribeServiceCommand unSubscribeServiceCommand) {
+    public void handle(UnSubscribeServiceCommand unSubscribeServiceCommand) {
         apply(ServiceUnSubscribedEvent.builder()
                                       .productUUID(unSubscribeServiceCommand.getProductUUID())
                                       .build());
@@ -110,7 +102,6 @@ public class ClientAggregate {
 
     @EventSourcingHandler
     public void on(ServiceUnSubscribedEvent serviceUnSubscribedEvent) {
-        products.removeIf(s -> s.getProductUUID()
-                                .equalsIgnoreCase(serviceUnSubscribedEvent.getProductUUID()));
+        products.removeIf(s -> s.getProductUUID().equalsIgnoreCase(serviceUnSubscribedEvent.getProductUUID()));
     }
 }

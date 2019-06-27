@@ -23,17 +23,11 @@ public class Account {
 
     private double balance;
 
+    @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
-
     @ManyToOne
-    @JoinColumn(name="client_id")
+    @JoinColumn(name = "client_id")
     private Client client;
-
-    public Account(String uuid, String number) {
-        this.uuid = uuid;
-        this.number = number;
-    }
-
 
 }

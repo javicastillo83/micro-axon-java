@@ -1,5 +1,6 @@
 package com.sbaxon.business.account.aggregate;
 
+import com.sbaxon.business.account.command.CreateAccountCommand;
 import com.sbaxon.business.account.command.CreditMoneyCommand;
 import com.sbaxon.business.account.command.DebitMoneyCommand;
 import com.sbaxon.business.account.event.*;
@@ -26,23 +27,37 @@ public class AccountAggregate {
 
     private String number;
 
-    private double amount;
+    private double balance;
 
     private AccountStatus status;
 
     @AggregateMember
     private List<Operation> operations;
 
+    @CommandHandler
+    public AccountAggregate(CreateAccountCommand createAccountCommand) {
+        apply(AccountCreatedEvent.builder()
+                                 .accountUUID(createAccountCommand.getAccountUUID())
+                                 .clientUUID(createAccountCommand.getClientUUID())
+                                 .number(UUID.randomUUID().toString())
+                                 .subscriptionUUID(createAccountCommand.getSubscriptionUUID())
+                                 .status(AccountStatus.CREATED)
+                                 .balance(0.0)
+                                 .build());
+    }
+
     @EventSourcingHandler
     public void on(AccountCreatedEvent accountCreatedEvent) {
-        number = accountCreatedEvent.getNumber();
+        accountUUID = accountCreatedEvent.getAccountUUID();
         clientUUID = accountCreatedEvent.getClientUUID();
-        status = AccountStatus.CREATED;
+        number = accountCreatedEvent.getNumber();
+        status = accountCreatedEvent.getStatus();
+        balance = accountCreatedEvent.getBalance();
         operations = new ArrayList<>();
     }
 
     @CommandHandler
-    public void on(CreditMoneyCommand creditMoneyCommand) {
+    public void handle(CreditMoneyCommand creditMoneyCommand) {
         apply(MoneyCreditedEvent.builder()
                                 .accountUUID(creditMoneyCommand.getAccountUUID())
                                 .date(new Date())
@@ -53,23 +68,25 @@ public class AccountAggregate {
     @EventSourcingHandler
     public void on(MoneyCreditedEvent moneyCreditedEvent) {
 
-        if (this.amount < 0 & (this.amount + moneyCreditedEvent.getAmount()) >= 0) {
+        if (this.balance < 0 & (this.balance + moneyCreditedEvent.getAmount()) >= 0) {
             apply(AccountActivatedEvent.builder()
                                        .accountUUID(this.accountUUID)
                                        .status(AccountStatus.ACTIVATED));
         }
 
-        amount += moneyCreditedEvent.getAmount();
+        balance += moneyCreditedEvent.getAmount();
 
         //add operation
         operations.add(Operation.builder()
-                                .operationUUID(UUID.randomUUID().toString())
+                                .operationUUID(UUID.randomUUID()
+                                                   .toString())
                                 .date(new Date())
-                                .amount(moneyCreditedEvent.getAmount()).build());
+                                .amount(moneyCreditedEvent.getAmount())
+                                .build());
     }
 
     @CommandHandler
-    public void on(DebitMoneyCommand debitMoneyCommand) {
+    public void handle(DebitMoneyCommand debitMoneyCommand) {
         apply(MoneyDebitedEvent.builder()
                                .accountUUID(debitMoneyCommand.getAccountUUID())
                                .date(new Date())
@@ -80,18 +97,20 @@ public class AccountAggregate {
     @EventSourcingHandler
     public void on(MoneyDebitedEvent moneyDebitedEvent) {
 
-        if (this.amount >= 0 & (this.amount - moneyDebitedEvent.getAmount()) < 0) {
+        if (this.balance >= 0 & (this.balance - moneyDebitedEvent.getAmount()) < 0) {
             apply(AccountDisabledEvent.builder()
                                       .accountUUID(this.accountUUID)
                                       .status(AccountStatus.HOLD));
         }
-        amount -= moneyDebitedEvent.getAmount();
+        balance -= moneyDebitedEvent.getAmount();
 
         //add operation
         operations.add(Operation.builder()
-                                .operationUUID(UUID.randomUUID().toString())
+                                .operationUUID(UUID.randomUUID()
+                                                   .toString())
                                 .date(new Date())
-                                .amount(moneyDebitedEvent.getAmount()).build());
+                                .amount(moneyDebitedEvent.getAmount())
+                                .build());
 
     }
 

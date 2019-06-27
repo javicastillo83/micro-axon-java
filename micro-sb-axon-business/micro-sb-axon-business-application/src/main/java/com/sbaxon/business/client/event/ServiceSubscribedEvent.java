@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ServiceSubscribedEvent {
 
-
-    private String clientUUID;
+    private String subscriptionUUID;
 
     private String serviceUUID;
+
+    private String clientUUID;
 
 
 }

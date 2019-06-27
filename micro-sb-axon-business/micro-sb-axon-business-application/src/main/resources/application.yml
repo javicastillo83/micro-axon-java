@@ -27,5 +27,5 @@ axon:
         events: jackson
         general: jackson
         messages: jackson
-    amqp:
-        exchange: events.tx
+#    amqp:
+#        exchange: events.tx

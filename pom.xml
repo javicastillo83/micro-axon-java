@@ -9,7 +9,7 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.sbaxon</groupId>
-    <artifactId>micro-sb-axon</artifactId>
+    <artifactId>micro-axon</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>MicroAxonArchitecture</name>
     <description>Microservice Architecture with Spring Boot and Axon</description>
@@ -103,9 +103,9 @@
     </build>
 
     <modules>
-        <module>micro-sb-axon-business</module>
-        <module>micro-sb-axon-messaging</module>
-        <module>micro-sb-axon-view</module>
+        <module>micro-axon-domain</module>
+        <module>micro-axon-event-handlers</module>
+        <module>micro-axon-query</module>
 
     </modules>
 </project>

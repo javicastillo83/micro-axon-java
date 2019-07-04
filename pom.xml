@@ -44,6 +44,13 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
+            <dependency>
+                <groupId>org.axonframework</groupId>
+                <artifactId>axon-modelling</artifactId>
+                <version>${axon.version}</version>
+            </dependency>
+
             <!-- Test -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -60,12 +67,14 @@
     </dependencyManagement>
 
     <dependencies>
+
         <!-- Provided -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -103,8 +112,11 @@
     </build>
 
     <modules>
-        <module>micro-axon-domain</module>
-        <module>micro-axon-event-handlers</module>
+        <module>micro-axon-core</module>
+        <module>micro-axon-account</module>
+        <module>micro-axon-bankservice</module>
+        <module>micro-axon-client</module>
+        <module>micro-axon-handler</module>
         <module>micro-axon-query</module>
 
     </modules>

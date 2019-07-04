@@ -1,0 +1,30 @@
+server:
+    port: 8080
+
+spring:
+
+    datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:9306/micro-query
+        username: micro-query
+        password: micro-query
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: false
+        open-in-view: false
+        properties:
+            hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+
+    rabbitmq:
+        port: 8672
+        username: rabbit
+        password: rabbit
+
+    jackson:
+        default-property-inclusion: non_empty
+
+axon:
+    serializer:
+        general: jackson

@@ -1,21 +1,52 @@
 version: '3'
 services:
-    db:
+    db-client:
         image: mysql:8.0.16
-        container_name: micro-db
+        container_name: micro-client
         environment:
             MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: micro
-            MYSQL_USER: micro
-            MYSQL_PASSWORD: micro
+            MYSQL_DATABASE: micro-client
+            MYSQL_USER: micro-client
+            MYSQL_PASSWORD: micro-client
         ports:
             - "6306:3306"
+    db-account:
+        image: mysql:8.0.16
+        container_name: micro-account
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: micro-account
+            MYSQL_USER: micro-account
+            MYSQL_PASSWORD: micro-account
+        ports:
+            - "7306:3306"
+    db-bankservice:
+        image: mysql:8.0.16
+        container_name: micro-bankservice
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: micro-bankservice
+            MYSQL_USER: micro-bankservice
+            MYSQL_PASSWORD: micro-bankservice
+        ports:
+            - "8306:3306"
+
+    db-query:
+        image: mysql:8.0.16
+        container_name: micro-query
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: micro-query
+            MYSQL_USER: micro-query
+            MYSQL_PASSWORD: micro-query
+        ports:
+            - "9306:3306"
     rabbit:
         image: rabbitmq:3.7-management
-        container_name: micro-rabbit
+        container_name: micro-multiaggregate-rabbit
         environment:
             RABBITMQ_DEFAULT_USER: rabbit
             RABBITMQ_DEFAULT_PASS: rabbit
         ports:
-            - "6672:5672"
-            - "15672:15672"
+            - "8672:5672"
+            - "15872:15672"

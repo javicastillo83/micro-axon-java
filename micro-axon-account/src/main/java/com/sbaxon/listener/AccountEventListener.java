@@ -1,8 +1,8 @@
 package com.sbaxon.listener;
 
-import com.sbaxon.domain.service.IAccountService;
 import com.sbaxon.domain.event.CreditAccountEvent;
 import com.sbaxon.domain.event.DebitAccountEvent;
+import com.sbaxon.domain.service.IAccountService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 

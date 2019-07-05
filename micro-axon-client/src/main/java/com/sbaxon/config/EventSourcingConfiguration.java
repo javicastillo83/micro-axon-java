@@ -15,11 +15,8 @@ public class EventSourcingConfiguration {
         return new SpringAggregateSnapshotterFactoryBean();
     }
 
-
     @Bean
     public SnapshotTriggerDefinition snapshotter(Snapshotter snapshotter) {
         return new EventCountSnapshotTriggerDefinition(snapshotter, 5);
     }
-
-
 }

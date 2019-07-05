@@ -17,8 +17,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <axon.version>4.1.1</axon.version>
-        <axon-amqp-extension.version>4.1</axon-amqp-extension.version>
+        <axon.version>4.1</axon.version>
         <mapstruct.version>1.3.0.Final</mapstruct.version>
         <mybatis.version>2.0.1</mybatis.version>
     </properties>
@@ -43,6 +42,18 @@
                         <artifactId>axon-server-connector</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.axonframework.extensions.jgroups</groupId>
+                <artifactId>axon-jgroups-spring-boot-autoconfigure</artifactId>
+                <version>${axon.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.axonframework.extensions.amqp</groupId>
+                <artifactId>axon-amqp-spring-boot-starter</artifactId>
+                <version>${axon.version}</version>
             </dependency>
 
             <dependency>

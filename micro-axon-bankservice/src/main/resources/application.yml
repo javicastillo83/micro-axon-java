@@ -28,7 +28,15 @@ spring:
 axon:
     serializer:
         general: jackson
-#    Si activamos esta propiedad, los eventos que se transmiten a través del eventBus interno para hacer el EventSourcing se envarían a través de rabbitmq para que puedan
-#    ser procesados por otros sistemas...
+    # Si activamos esta propiedad, los eventos que se transmiten a través del eventBus interno para hacer el EventSourcing se envarían a través de rabbitmq para que puedan
+    # ser procesados por otros sistemas...
     amqp:
         exchange: events.tx
+    # De esta forma se activa el commandbus distribuido por jgroups
+    distributed:
+        enabled: true
+        jgroups:
+            bind-addr: 127.0.0.1
+            bind-port: 9800
+            cluster-name: Axon-CommandBus
+            configuration-file: tcp.xml

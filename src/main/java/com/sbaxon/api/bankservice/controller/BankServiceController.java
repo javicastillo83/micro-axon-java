@@ -1,6 +1,6 @@
 package com.sbaxon.api.bankservice.controller;
 
-import com.sbaxon.domain.bankservice.dto.CreateBankServiceDTO;
+import com.sbaxon.api.bankservice.dto.CreateBankServiceDTO;
 import com.sbaxon.domain.bankservice.service.CreateBankService;
 import com.sbaxon.domain.bankservice.service.IBankServiceService;
 import org.springframework.web.bind.annotation.PostMapping;

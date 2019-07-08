@@ -24,6 +24,14 @@ public class RabbitMQConfiguration implements RabbitListenerConfigurer {
     }
 
     @Bean
+    public Binding eventBinding() {
+        return BindingBuilder.bind(eventsQueue())
+                             .to(eventsExchange())
+                             .with("#")
+                             .noargs();
+    }
+
+    @Bean
     public Queue createBankServiceQueue() {
         return QueueBuilder.durable("create_bankservice_queue")
                            .build();
@@ -63,14 +71,6 @@ public class RabbitMQConfiguration implements RabbitListenerConfigurer {
     public Queue unSubscribePoductsQueue() {
         return QueueBuilder.durable("unsubscribe_product_queue")
                            .build();
-    }
-
-    @Bean
-    public Binding binding() {
-        return BindingBuilder.bind(eventsQueue())
-                             .to(eventsExchange())
-                             .with("#")
-                             .noargs();
     }
 
     public void configureRabbitListeners(RabbitListenerEndpointRegistrar registrar) {

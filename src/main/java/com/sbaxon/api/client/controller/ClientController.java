@@ -1,8 +1,8 @@
 package com.sbaxon.api.client.controller;
 
-import com.sbaxon.domain.client.dto.CreateClientDTO;
-import com.sbaxon.domain.client.dto.SubscribeProductDTO;
-import com.sbaxon.domain.client.dto.UpdateClientDTO;
+import com.sbaxon.api.client.dto.CreateClientDTO;
+import com.sbaxon.api.client.dto.SubscribeProductDTO;
+import com.sbaxon.api.client.dto.UpdateClientDTO;
 import com.sbaxon.domain.client.service.CreateClient;
 import com.sbaxon.domain.client.service.IClientService;
 import com.sbaxon.domain.client.service.SubscribeProduct;

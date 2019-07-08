@@ -18,7 +18,7 @@ spring:
             hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
 
     rabbitmq:
-        port: 6672
+        port: 5672
         username: rabbit
         password: rabbit
 
@@ -32,5 +32,5 @@ axon:
         messages: jackson
 #    Si activamos esta propiedad, los eventos que se transmiten a través del eventBus interno para hacer el EventSourcing se envarían a través de rabbitmq para que puedan
 #    ser procesados por otros sistemas...
-    amqp:
-        exchange: events.tx
+#    amqp:
+#        exchange: events.tx

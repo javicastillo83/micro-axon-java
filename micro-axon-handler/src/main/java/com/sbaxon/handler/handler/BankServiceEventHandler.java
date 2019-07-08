@@ -7,8 +7,8 @@ import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Service;
 
-@ProcessingGroup("bankservices")
 @Service
+@ProcessingGroup("bankservices")
 public class BankServiceEventHandler {
 
     private final IBankServiceRepository serviceRepository;

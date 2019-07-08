@@ -25,3 +25,11 @@ spring:
 axon:
     serializer:
         general: jackson
+    eventhandling:
+        processors:
+             clients:
+                  source: eventsMessageSource
+             bankservices:
+                  source: eventsMessageSource
+             accounts:
+                  source: eventsMessageSource

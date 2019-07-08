@@ -1,4 +1,4 @@
-package com.sbaxon;
+package com.sbaxon.handler;
 
 import org.axonframework.springboot.autoconfig.JpaAutoConfiguration;
 import org.axonframework.springboot.autoconfig.JpaEventStoreAutoConfiguration;

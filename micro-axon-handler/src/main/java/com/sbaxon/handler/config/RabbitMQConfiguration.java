@@ -27,7 +27,7 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
-    public SpringAMQPMessageSource myMessageSource(Serializer serializer) {
+    public SpringAMQPMessageSource eventsMessageSource(Serializer serializer) {
         return new SpringAMQPMessageSource(serializer) {
 
             @RabbitListener(queues = "events_queue")

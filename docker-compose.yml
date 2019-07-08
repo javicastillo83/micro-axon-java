@@ -2,7 +2,6 @@ version: '3'
 services:
     db-client:
         image: mysql:8.0.16
-        container_name: micro-client
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: micro-client
@@ -12,7 +11,6 @@ services:
             - "6306:3306"
     db-account:
         image: mysql:8.0.16
-        container_name: micro-account
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: micro-account
@@ -22,7 +20,6 @@ services:
             - "7306:3306"
     db-bankservice:
         image: mysql:8.0.16
-        container_name: micro-bankservice
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: micro-bankservice
@@ -33,7 +30,6 @@ services:
 
     db-query:
         image: mysql:8.0.16
-        container_name: micro-query
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: micro-query
@@ -43,7 +39,6 @@ services:
             - "9306:3306"
     rabbit:
         image: rabbitmq:3.7-management
-        container_name: micro-multiaggregate-rabbit
         environment:
             RABBITMQ_DEFAULT_USER: rabbit
             RABBITMQ_DEFAULT_PASS: rabbit

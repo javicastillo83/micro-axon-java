@@ -10,9 +10,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.sbaxon</groupId>
     <artifactId>micro-axon-core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
@@ -20,4 +18,5 @@
             <artifactId>axon-modelling</artifactId>
         </dependency>
     </dependencies>
+
 </project>

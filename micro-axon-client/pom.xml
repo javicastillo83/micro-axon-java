@@ -10,17 +10,15 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.sbaxon</groupId>
     <artifactId>micro-axon-client</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
     <dependencies>
+
         <dependency>
             <groupId>com.sbaxon</groupId>
             <artifactId>micro-axon-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.axonframework</groupId>
@@ -29,14 +27,12 @@
 
         <dependency>
             <groupId>org.axonframework.extensions.jgroups</groupId>
-            <artifactId>axon-jgroups-spring-boot-autoconfigure</artifactId>
-            <version>${axon.version}</version>
+            <artifactId>axon-jgroups-spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.axonframework.extensions.amqp</groupId>
             <artifactId>axon-amqp-spring-boot-starter</artifactId>
-            <version>${axon.version}</version>
         </dependency>
 
         <dependency>
@@ -59,11 +55,6 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
-
 
         <!-- Runtime -->
         <dependency>
@@ -73,5 +64,14 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

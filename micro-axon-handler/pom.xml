@@ -10,17 +10,40 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>micro-axon-query</artifactId>
+    <artifactId>micro-axon-handler</artifactId>
 
     <dependencies>
+
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <groupId>com.sbaxon</groupId>
+            <artifactId>micro-axon-domain-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.axonframework.extensions.amqp</groupId>
+            <artifactId>axon-amqp-spring-boot-starter</artifactId>
+            <version>${axon-amqp-extension.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
 
         <!-- Runtime -->
@@ -29,6 +52,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+
     </dependencies>
 
     <build>

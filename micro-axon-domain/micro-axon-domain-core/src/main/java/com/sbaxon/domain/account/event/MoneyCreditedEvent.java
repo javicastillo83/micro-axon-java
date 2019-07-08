@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class MoneyCreditedEvent {
 
     private String accountUUID;

@@ -1,12 +1,12 @@
 server:
-    port: 8180
+    port: 9080
 
 spring:
     datasource:
         driverClassName: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:6306/micro
-        username: micro
-        password: micro
+        url: jdbc:mysql://localhost:7306/micro-query
+        username: micro-query
+        password: micro-query
 
     jackson:
         default-property-inclusion: non_empty

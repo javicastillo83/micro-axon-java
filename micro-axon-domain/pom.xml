@@ -13,11 +13,6 @@
     <artifactId>micro-axon-domain</artifactId>
     <packaging>pom</packaging>
 
-    <dependencies>
-
-
-    </dependencies>
-
     <modules>
         <module>micro-axon-domain-core</module>
         <module>micro-axon-domain-api</module>

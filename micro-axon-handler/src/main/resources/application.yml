@@ -2,9 +2,9 @@ spring:
 
     datasource:
         driverClassName: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:6306/micro-events
-        username: micro-events
-        password: micro-events
+        url: jdbc:mysql://localhost:7306/micro-query
+        username: micro-query
+        password: micro-query
 
     jpa:
         hibernate:
@@ -21,12 +21,15 @@ spring:
 
     jackson:
         default-property-inclusion: non_empty
+
 axon:
     serializer:
-        events: jackson
         general: jackson
-        messages: jackson
-    # Si activamos esta propiedad, los eventos que se transmiten a través del eventBus interno para hacer el EventSourcing se envarían a través de rabbitmq para que puedan
-    # ser procesados por otros sistemas...
-    amqp:
-        exchange: events.tx
+    eventhandling:
+        processors:
+             clients:
+                  source: eventsMessageSource
+             bankservices:
+                  source: eventsMessageSource
+             accounts:
+                  source: eventsMessageSource

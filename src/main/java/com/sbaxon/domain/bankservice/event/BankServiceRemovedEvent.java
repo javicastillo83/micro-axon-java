@@ -1,4 +1,4 @@
-package com.sbaxon.domain.client.event;
+package com.sbaxon.domain.bankservice.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ServiceSubscribedEvent {
-
-    private String subscriptionUUID;
+public class BankServiceRemovedEvent {
 
     private String bankServiceUUID;
-
-    private String clientUUID;
-
 
 }

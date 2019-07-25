@@ -1,9 +1,6 @@
 package com.sbaxon.domain.client.service;
 
-import com.sbaxon.domain.client.command.CreateClientCommand;
-import com.sbaxon.domain.client.command.SubscribeServiceCommand;
-import com.sbaxon.domain.client.command.UnSubscribeServiceCommand;
-import com.sbaxon.domain.client.command.UpdateClientCommand;
+import com.sbaxon.domain.client.command.*;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +19,7 @@ public class ClientServiceImpl implements IClientService {
     @Override
     public CompletableFuture<String> create(CreateClient createClient) {
         String clientUUID = UUID.randomUUID().toString();
+
         return commandGateway.send(CreateClientCommand.builder()
                                                       .clientUUID(clientUUID)
                                                       .firstName(createClient.getFirstName())
@@ -30,6 +28,8 @@ public class ClientServiceImpl implements IClientService {
                                                       .build());
     }
 
+
+
     @Override
     public CompletableFuture<String> update(String clientUUID, UpdateClient updateClient) {
         return commandGateway.send(UpdateClientCommand.builder()
@@ -37,6 +37,13 @@ public class ClientServiceImpl implements IClientService {
                                                       .firstName(updateClient.getFirstName())
                                                       .lastName(updateClient.getLastName())
                                                       .email(updateClient.getEmail())
+                                                      .build());
+    }
+
+    @Override
+    public CompletableFuture<String> remove(String clientUUID) {
+        return commandGateway.send(RemoveClientCommand.builder()
+                                                      .clientUUID(clientUUID)
                                                       .build());
     }
 

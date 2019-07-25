@@ -7,4 +7,5 @@ public interface IBankServiceRepository extends JpaRepository<BankService,Long> 
 
     BankService findByUuid(String uuid);
 
+    void removeByUuid(String uuid);
 }

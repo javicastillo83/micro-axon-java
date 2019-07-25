@@ -40,6 +40,11 @@ public class ClientController {
                                                                  .build());
     }
 
+    @DeleteMapping("/{clientUUID}")
+    public CompletableFuture<String> deleteClient(@PathVariable String clientUUID) {
+        return this.clientService.remove(clientUUID);
+    }
+
     @PostMapping("/{clientUUID}/products")
     public CompletableFuture<String> subscribeProduct(@PathVariable String clientUUID, @RequestBody @Valid SubscribeProductDTO subscribeProductDTO) {
         return this.clientService.subscribeProduct(clientUUID, SubscribeProduct.builder()

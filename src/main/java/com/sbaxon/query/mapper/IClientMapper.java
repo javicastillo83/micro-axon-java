@@ -15,7 +15,7 @@ public interface IClientMapper {
             @Result(property = "firstName", column = "client_firstName"),
             @Result(property = "lastName", column = "client_lastName"),
             @Result(property = "email", column = "client_email"),
-            @Result(property = "accounts", column = "id", javaType = List.class, many = @Many(select = "selectAccounts"))
+            @Result(property = "accounts", column = "id", javaType = List.class, many = @Many(select = "accounts"))
 
     })
     List<Client> findAll();
@@ -27,5 +27,8 @@ public interface IClientMapper {
             @Result(property = "status", column = "account_status"),
             @Result(property = "balance", column = "account_balance")
     })
-    List<Account> selectAccounts(Long clientId);
+    List<Account> accounts(Long clientId);
+
+    @Select("SELECT c.id as id, c.uuid as client_uuid, c.first_name as client_firstName, c.last_name as client_lastName, c.email as client_email FROM client c where c.uuid = #{clientUUID}")
+    Client findByUUID(String clientUUID);
 }

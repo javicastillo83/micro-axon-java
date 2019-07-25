@@ -9,13 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ServiceSubscribedEvent {
-
-    private String subscriptionUUID;
-
-    private String bankServiceUUID;
+public class ClientRemovedEvent {
 
     private String clientUUID;
-
 
 }

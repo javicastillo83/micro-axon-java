@@ -1,13 +1,13 @@
 package com.sbaxon.domain.client.aggregate;
 
 import com.sbaxon.domain.client.command.CreateClientCommand;
+import com.sbaxon.domain.client.command.RemoveClientCommand;
 import com.sbaxon.domain.client.command.SubscribeServiceCommand;
-import com.sbaxon.domain.client.command.UnSubscribeServiceCommand;
 import com.sbaxon.domain.client.command.UpdateClientCommand;
 import com.sbaxon.domain.client.event.ClientCreatedEvent;
+import com.sbaxon.domain.client.event.ClientRemovedEvent;
 import com.sbaxon.domain.client.event.ClientUpdatedEvent;
 import com.sbaxon.domain.client.event.ServiceSubscribedEvent;
-import com.sbaxon.domain.client.event.ServiceUnSubscribedEvent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -21,11 +21,12 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
+import static org.axonframework.modelling.command.AggregateLifecycle.markDeleted;
 
 @Aggregate(snapshotTriggerDefinition = "clientSnapshotter")
 @NoArgsConstructor //Axon
 @Data
-public class ClientAggregate  {
+public class ClientAggregate {
 
     @AggregateIdentifier
     private String clientUUID;
@@ -36,7 +37,6 @@ public class ClientAggregate  {
     //Entity List
     @AggregateMember
     private List<ProductEntity> products;
-
 
     @CommandHandler
     public ClientAggregate(CreateClientCommand createClientCommand) {
@@ -73,10 +73,22 @@ public class ClientAggregate  {
     public void on(ClientUpdatedEvent clientUpdatedEvent) {
         clientUUID = clientUpdatedEvent.getClientUUID();
         clientInfo = ClientInfo.builder()
-                              .firstName(clientUpdatedEvent.getFirstName())
-                              .lastName(clientUpdatedEvent.getLastName())
-                              .email(clientUpdatedEvent.getEmail())
-                              .build();
+                               .firstName(clientUpdatedEvent.getFirstName())
+                               .lastName(clientUpdatedEvent.getLastName())
+                               .email(clientUpdatedEvent.getEmail())
+                               .build();
+    }
+
+    @CommandHandler
+    public void handle(RemoveClientCommand removeClientCommand) {
+        apply(ClientRemovedEvent.builder()
+                                .clientUUID(removeClientCommand.getClientUUID())
+                                .build());
+    }
+
+    @EventSourcingHandler
+    public void on(ClientRemovedEvent clientRemovedEvent) {
+        markDeleted();
     }
 
     @CommandHandler
@@ -98,16 +110,5 @@ public class ClientAggregate  {
         products.add(productEntity);
     }
 
-    @CommandHandler
-    public void handle(UnSubscribeServiceCommand unSubscribeServiceCommand) {
-        apply(ServiceUnSubscribedEvent.builder()
-                                      .productUUID(unSubscribeServiceCommand.getProductUUID())
-                                      .build());
-    }
 
-    @EventSourcingHandler
-    public void on(ServiceUnSubscribedEvent serviceUnSubscribedEvent) {
-        products.removeIf(s -> s.getProductUUID()
-                                .equalsIgnoreCase(serviceUnSubscribedEvent.getProductUUID()));
-    }
 }

@@ -1,12 +1,11 @@
 package com.sbaxon.api.bankservice.controller;
 
 import com.sbaxon.api.bankservice.dto.CreateBankServiceDTO;
+import com.sbaxon.api.bankservice.dto.UpdateBankServiceDTO;
 import com.sbaxon.domain.bankservice.service.CreateBankService;
 import com.sbaxon.domain.bankservice.service.IBankServiceService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.sbaxon.domain.bankservice.service.UpdateBankService;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
@@ -15,19 +14,31 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/bankservices")
 public class BankServiceController {
 
-    private final IBankServiceService serviceService;
+    private final IBankServiceService bankServiceService;
 
-    public BankServiceController(IBankServiceService serviceService) {
-        this.serviceService = serviceService;
+    public BankServiceController(IBankServiceService bankServiceService) {
+        this.bankServiceService = bankServiceService;
     }
 
     @PostMapping
     public CompletableFuture<String> create(@RequestBody @Valid CreateBankServiceDTO createBankServiceDTO) {
-        return serviceService.create(CreateBankService.builder()
-                                                      .bankServiceType(createBankServiceDTO.getBankServiceType())
-                                                      .name(createBankServiceDTO.getName())
-                                                      .build());
+        return bankServiceService.create(CreateBankService.builder()
+                                                          .bankServiceType(createBankServiceDTO.getBankServiceType())
+                                                          .name(createBankServiceDTO.getName())
+                                                          .build());
     }
 
+    @PutMapping("/{bankServiceUUID}")
+    public CompletableFuture<String> updateBankService(@PathVariable String bankServiceUUID, @RequestBody @Valid UpdateBankServiceDTO updateBankServiceDTO) {
+        return this.bankServiceService.update(bankServiceUUID, UpdateBankService.builder()
+                                                                                .name(updateBankServiceDTO.getName())
+                                                                                .bankServiceType(updateBankServiceDTO.getBankServiceType())
+                                                                                .build());
+    }
+
+    @DeleteMapping("/{bankServiceUUID}")
+    public CompletableFuture<String> deleteBankService(@PathVariable String bankServiceUUID) {
+        return this.bankServiceService.remove(bankServiceUUID);
+    }
 }
 
